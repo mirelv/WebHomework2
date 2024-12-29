@@ -1,0 +1,7 @@
+version: '2.23.3' 
+
+services:
+  FastAPI:
+    build: .
+    ports:
+      - "8000:8000"
