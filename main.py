@@ -70,6 +70,15 @@ def create_menu_item(item: MenuItem):
     MENU_DB.append(item)
     return item
 
+@app.put("/menu/{id}")
+def update_menu_item(id: int, item: MenuItem):
+    for existing_item in MENU_DB:
+        if existing_item.id == id:
+            existing_item.name = item.name
+            existing_item.description = item.description
+            return existing_item
+    raise HTTPException(status_code=404, detail="Пункт меню не найден")
+
 @app.delete("/menu/{id}")
 def delete_menu_item(id: int):
     for index, item in enumerate(MENU_DB):
@@ -87,6 +96,31 @@ def read_service(id: int):
     for service in SERVICES_DB:
         if service.id == id:
             return service
+    raise HTTPException(status_code=404, detail="Услуга не найдена")
+
+@app.post("/services/")
+def create_service(service: Service):
+    for existing_service in SERVICES_DB:
+        if existing_service.id == service.id:
+            raise HTTPException(status_code=400, detail="Услуга с таким ID уже существует")
+    SERVICES_DB.append(service)
+    return service
+
+@app.put("/services/{id}")
+def update_service(id: int, service: Service):
+    for existing_service in SERVICES_DB:
+        if existing_service.id == id:
+            existing_service.name = service.name
+            existing_service.description = service.description
+            return existing_service
+    raise HTTPException(status_code=404, detail="Услуга не найдена")
+
+@app.delete("/services/{id}")
+def delete_service(id: int):
+    for index, service in enumerate(SERVICES_DB):
+        if service.id == id:
+            del SERVICES_DB[index]
+            return {"message": "Услуга успешно удалена"}
     raise HTTPException(status_code=404, detail="Услуга не найдена")
 
 @app.get("/contact/")
